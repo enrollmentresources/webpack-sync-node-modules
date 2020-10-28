@@ -2,6 +2,12 @@ const { execSync } = require("child_process");
 const fs = require("fs");
 
 class SyncNodeModules {
+  functionName = null;
+
+  constructor(options) {
+    this.functionName = options.functionName;
+  }
+
   // Define `apply` as its prototype method which is supplied with compiler as its argument
   apply(compiler) {
     let packageLastModified;
@@ -11,10 +17,11 @@ class SyncNodeModules {
       // );
       const packageModifiedAt = fs.statSync("package.json").mtime.getTime();
       if (!packageLastModified || packageLastModified != packageModifiedAt) {
-        console.log("Source package.json was modified, executing NPM INSTALL");
+        console.log("Source package.json was modified, executing SAM BUILD");
         execSync("cp package.json " + compiler.options.output.path);
+        execSync("cd ../../ && npm run sam:build");
         execSync(
-          `cd ${compiler.options.output.path} && npm install --production`
+          `cp ../../.aws-sam/build/${this.functionName}/node_modules ${compiler.options.output.path}/node_modules`
         );
         packageLastModified = packageModifiedAt;
       }
