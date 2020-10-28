@@ -6,9 +6,9 @@ class SyncNodeModules {
   apply(compiler) {
     let packageLastModified;
     compiler.hooks.emit.tap("SyncNodeModules", () => {
-      execSync(
-        `cd ${compiler.options.output.path} && find . -type f -not -name '*node_modules' -delete`
-      );
+      // execSync(
+      //   `cd ${compiler.options.output.path} && find . -type f -not -name '*node_modules' -delete`
+      // );
       const packageModifiedAt = fs.statSync("package.json").mtime.getTime();
       if (!packageLastModified || packageLastModified != packageModifiedAt) {
         console.log("Source package.json was modified, executing NPM INSTALL");
