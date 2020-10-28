@@ -1,0 +1,19 @@
+{
+  "name": "webpack-sync-node-modules",
+  "version": "0.1.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enrollmentresources/webpack-sync-node-modules.git"
+  },
+  "author": "Andrew Becker (@abecks)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/enrollmentresources/webpack-sync-node-modules/issues"
+  },
+  "homepage": "https://github.com/enrollmentresources/webpack-sync-node-modules#readme"
+}
