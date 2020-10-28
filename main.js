@@ -18,7 +18,7 @@ class SyncNodeModules {
       const packageModifiedAt = fs.statSync("package.json").mtime.getTime();
       if (!packageLastModified || packageLastModified != packageModifiedAt) {
         console.log("Source package.json was modified, executing SAM BUILD");
-        execSync("cp package.json " + compiler.options.output.path);
+        execSync("cp -R package.json " + compiler.options.output.path);
         execSync("cd ../../ && npm run sam:build");
         execSync(
           `cp ../../.aws-sam/build/${this.functionName}/node_modules ${compiler.options.output.path}/node_modules`
