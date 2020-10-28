@@ -29,8 +29,8 @@ class SyncNodeModules {
         execSync("cp package.json " + compiler.options.output.path);
         fs.utimesSync(
           compiler.options.output.path + "/package.json",
-          stats.atime,
-          stats.mtime
+          sourceStats.atime,
+          sourceStats.mtime
         );
         execSync(
           `cd ${compiler.options.output.path}/../../ && pwd && npm run sam:build`
