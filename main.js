@@ -10,20 +10,34 @@ class SyncNodeModules {
 
   // Define `apply` as its prototype method which is supplied with compiler as its argument
   apply(compiler) {
-    let packageLastModified;
     compiler.hooks.emit.tap("SyncNodeModules", () => {
       // execSync(
       //   `cd ${compiler.options.output.path} && find . -type f -not -name '*node_modules' -delete`
       // );
-      const packageModifiedAt = fs.statSync("package.json").mtime.getTime();
-      if (!packageLastModified || packageLastModified != packageModifiedAt) {
+      const sourceStats = fs.statSync("package.json");
+
+      let destStats;
+      try {
+        destStats = fs.statSync(compiler.options.output.path + "/package.json");
+      } catch (e) {}
+
+      if (
+        !destStats ||
+        destStats.mtime.getTime() != sourceStats.mtime.getTime()
+      ) {
         console.log("Source package.json was modified, executing SAM BUILD");
         execSync("cp package.json " + compiler.options.output.path);
-        execSync("cd ../../ && npm run sam:build");
-        execSync(
-          `cp -R ../../.aws-sam/build/${this.functionName}/node_modules ${compiler.options.output.path}/node_modules`
+        fs.utimesSync(
+          compiler.options.output.path + "/package.json",
+          stats.atime,
+          stats.mtime
         );
-        packageLastModified = packageModifiedAt;
+        execSync(
+          `cd ${compiler.options.output.path}/../../ && pwd && npm run sam:build`
+        );
+        execSync(
+          `cp -R ${compiler.options.output.path}/../../.aws-sam/build/${this.functionName}/node_modules ${compiler.options.output.path}/node_modules`
+        );
       }
     });
   }
